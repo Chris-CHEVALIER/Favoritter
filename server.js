@@ -8,20 +8,21 @@ var client = new Twitter({
   access_token_secret: process.env.ACCESS_TOKEN_SECRET
 });
 
-wordToSearch = '#gaming';
-millisecondsBetweenCalls = 3000
+const wordToSearch = '#gaming';
+const millisecondsBetweenCalls = 60000
 
 setInterval(function() {
     client.get('search/tweets', {q: wordToSearch}, function(error, tweets, response) {
-        tweet = tweets.statuses[0];
-        if(!tweet.errors) {
-            client.post('favorites/create', {id: tweet.id_str}, function(error, tweet, response) {
-                if (!error) {
-                console.log(tweet);
-                } else {
-                    console.log(tweet);
-                }
-            })
-        }
+        tweets.statuses.map((tweet) => {
+            if(!tweet.errors) {
+                client.post('favorites/create', {id: tweet.id_str}, function(error, tweet, response) {
+                    if (!error) {
+                        console.log(tweet.text);
+                    } else {
+                        console.log(tweet);
+                    }
+                })
+            }
+        })
     });
 }, millisecondsBetweenCalls);
