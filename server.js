@@ -9,20 +9,20 @@ var client = new Twitter({
 });
 
 const wordToSearch = '#gaming';
-const millisecondsBetweenCalls = 60000
+const millisecondsBetweenCalls = 300000;
 
 setInterval(function() {
     client.get('search/tweets', {q: wordToSearch}, function(error, tweets, response) {
-        tweets.statuses.map((tweet) => {
-            if(!tweet.errors) {
-                client.post('favorites/create', {id: tweet.id_str}, function(error, tweet, response) {
-                    if (!error) {
-                        console.log(tweet.text);
-                    } else {
-                        console.log(tweet);
-                    }
-                })
-            }
-        })
+        tweet = tweets.statuses[0];
+        if (!error && response.caseless.dict.status == '200 OK') {
+            client.post('favorites/create', {id: tweet.id_str}, function(error, tweet, response) {
+                if (!error && response.caseless.dict.status == '200 OK') {
+                    console.log(tweet.text);
+                } else {
+                    console.log(tweet);
+                }
+            })
+        }
     });
 }, millisecondsBetweenCalls);
+
